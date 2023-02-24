@@ -4,13 +4,23 @@ Cleaning Data in SQL Queries
 
 */
 
+
+SELECT *
+FROM NashvilleHousing
+
+------------------------------------------------------------------------------------------------------
+
 -- Standardize Data Format
 
 SELECT SaleDateConverted, CONVERT(Date, SaleDate)
 FROM NashvilleHousing
 
+
+
 UPDATE NashvilleHousing
 SET SaleDate = CONVERT(Date, SaleDate)
+
+-- Alternate if it doesn't work
 
 ALTER TABLE NashvilleHousing
 Add SaleDateConverted Date;
@@ -18,6 +28,8 @@ Add SaleDateConverted Date;
 UPDATE NashvilleHousing
 SET SaleDateConverted = CONVERT(Date, SaleDate)
 
+
+----------------------------------------------------------------------------------------------------------
 
 -- Populate Property Address Data
 
@@ -43,6 +55,8 @@ JOIN NashvilleHousing b
 	AND a.[UniqueID ] <> b.[UniqueID ]
 WHERE a.PropertyAddress is null
 
+
+---------------------------------------------------------------------------------------------------------
 
 -- Breaking out Address into Individual Columns (Adress, City, State)
 
@@ -100,10 +114,18 @@ Add OwnerSplitState Nvarchar(255);
 UPDATE NashvilleHousing
 SET OwnerSplitState = PARSENAME(REPLACE(OwnerAddress, ',', '.'), 1)
 
+
+
+
 SELECT *
 FROM NashvilleHousing
 
+
+-------------------------------------------------------------------------------------------------------
+
+
 -- Change Y and N to Yes and No in "Sold as Vacant" field
+
 
 SELECT DISTINCT(SoldAsVacant)
 FROM NashvilleHousing
@@ -125,7 +147,10 @@ SET SoldAsVacant = CASE WHEN SoldAsVacant = 'Y' THEN 'Yes'
 
 
 
+------------------------------------------------------------------------------------------------------------------------------------
+
 -- Remove Duplicates
+
 
 WITH RowNumCTE AS(
 SELECT *, 
@@ -150,6 +175,7 @@ ORDER BY PropertyAddress
 SELECT *
 FROM NashvilleHousing
 
+---------------------------------------------------------------------------------------------------------------------
 
 -- Delete Unused Columns
 
@@ -158,7 +184,4 @@ SELECT *
 FROM NashvilleHousing
 
 ALTER TABLE NashvilleHousing
-DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress
-
-ALTER TABLE NashvilleHousing
-DROP COLUMN SaleDate
+DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
